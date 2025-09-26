@@ -8,7 +8,7 @@ def scrape_reddit(subreddit, pages, limit):
     1. Base URL for the subreddit
     2. Fetches multiple "pages" of posts using the `after` cursor for pagination
     3. Filters posts to only include those with image URLs(.jpg, .png, .jpeg)
-    4. Collects results (title + image_url) in a list.
+    4. Collects results (post_title + image_url) in a list.
     5. Saves the results and convert into a JSON file (`scraper_output.json`).
     """
 
@@ -31,11 +31,11 @@ def scrape_reddit(subreddit, pages, limit):
 
         for post in posts:
             post_data = post["data"]
-            title = post_data.get("title")
+            post_title = post_data.get("title")
             post_url = post_data.get("url")
 
             if post_url and post_url.lower().endswith((".jpg", ".png", ".jpeg")):
-                results.append({"title": title, "image_url": post_url})
+                results.append({"post_title": post_title, "image_url": post_url})
 
         after = data["data"].get("after")  
 
@@ -47,6 +47,6 @@ def scrape_reddit(subreddit, pages, limit):
     return results
 
 #Get 2 post per page for 10 pages
-get_posts = scrape_reddit(subreddit = "malaysia", pages = 10, limit = 2)
+get_posts = scrape_reddit(subreddit = "malaysia", pages = 10, limit = 5)
 with open("scraper_output.json", "w", encoding="utf-8") as f:
         json.dump(get_posts, f, ensure_ascii=False, indent=4)
